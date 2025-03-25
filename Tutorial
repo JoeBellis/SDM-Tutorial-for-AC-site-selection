@@ -1,0 +1,75 @@
+# Species Distribution Model Tutorial
+
+This tutorial will demonstrate how to run a species distribution model using R.
+
+# Introduction
+As the distributions of animals, plants and fungi are influenced by biotic and abiotic processes acting across a range of spatial scales, it is essential to consider both broad- and fine-scale factors when assessing a translocation recipient site. At broad scales, distributions are primarily shaped by dominant ecosystem processes and physiological tolerances to abiotic factors such as climate, soils, geology and hydrology. The spatial and temporal heterogeneity of these abiotic characteristics contributes to differences in population performance and persistence across species’ ranges. Therefore, determining suitable locations for assisted colonisation necessitates an understanding of the focal species’ abiotic niche. 
+
+The most widely recognised and commonly applied statistical approach for quantifying a species’ niche space and mapping it geographically is known as ‘ecological niche modelling’. Depending on the intended application, this method is also termed ‘species distribution modelling’ (when modelling current distributions) or ‘habitat suitability modelling’ (when modelling the suitability of habitats). Although more process-based (‘mechanistic’) approaches also exist (Kearney & Porter, 2009), all of these models employ mathematical algorithms to quantify relationships between species occurrences and environmental variables. Once trained on these relationships, an ecological niche model (ENM) can predict the suitability of sites within a given region, such as when evaluating potential assisted colonisation recipient sites.
+
+In the Guidelines for Reintroductions and Other Conservation Translocations, the International Union for the Conservation of Nature (IUCN) suggest that the climate requirements of the focal species be “matched to current and/or future climate at the destination site”. After training an ENM on relationships between species occurrences and recent climatic conditions, models can be projected onto future climate scenarios from the Intergovernmental Panel on Climate Change (IPCC) to predict patterns of suitability change in the future. This functionality makes ENMs especially applicable to assisted colonisation projects, where species are moved in response to existing and anticipated future threats within the indigenous range. However, projecting models to future scenarios comes with several potential sources of uncertainty, such as predicting into non-analogue climates and selecting among different climate change models and scenarios, both of which can significantly influence site selection decisions. Despite these challenges, it can be argued that the biological and financial risks of disregarding climate change impacts outweigh those associated with acting on model projections—provided these uncertainties are carefully managed and clearly communicated. 
+
+In the walk-through below, we introduce the main steps for building and evaluating ENMs for use in recipient site assessment and selection. The primary goal here is not to present a detailed set of guidelines on how to construct an ENM, there are already plenty of great resources designed for this purpose (see Guisan et al., 2017; Araújo et al., 2019; Zurell et al., 2020; Sillero et al., 2021; see also Module III of the CPC Applied Plant Conservation Online Course); rather, it is to demonstrate how to approach some of the context-specific factors associated with using these models to aid the process of selecting candidate sites for assisted colonisation. It is important to emphasise that ENMs should not be viewed as a substitute for field-based assessments; instead, they complement fine-scale assessments by offering an additional layer of insight on a location’s suitability for translocation. Due to data constraints, ENMs can often only be implemented at relatively coarse spatial resolutions (e.g., 1-km cells), which may not capture the relevant suite of microhabitat and microclimatic conditions present at a site. Consequently, site-based, fine-scale assessments are likely to be more informative for understanding a species’ precise environmental affinities. Nevertheless, ENMs provide a valuable broad-scale perspective on the environmental conditions a species encounters and serve as a tool for projecting suitable macroclimate into the future.
+
+# Five key modelling steps
+The ENM modelling process can be broken down into five main steps: (i) conceptualisation, (ii) data preparation, (iii) model fitting, (iv) model assessment, and (v) prediction (Zurrell et al., 2020). The walk-through presented below follows this standardised workflow to model building and analysis. As emphasised by Zurrell and colleagues (2020), model building is an iterative process with opportunities for learning and knowledge-building along the way. Consequently, it is beneficial to revisit and refine certain steps, such as the choice of modelling extent or the presence/absence sampling design, to improve the model. For this reason, it can be helpful to view model building as a continuous cycle of refinement and improvement, rather than a linear workflow with a fixed endpoint.
+
+## Prerequisites
+
+Make sure you have the following R packages installed:
+- `dismo`
+- `raster`
+- `sp`
+
+You can install them using the following commands:
+
+```r
+install.packages("dismo")
+install.packages("raster")
+install.packages("sp")
+```
+
+## Step 1: Load the necessary libraries
+
+```r
+library(dismo)
+library(raster)
+library(sp)
+```
+
+## Step 2: Load your data
+
+Assuming you have a CSV file with species occurrence data and environmental variables:
+
+```r
+data <- read.csv("species_data.csv")
+```
+
+## Step 3: Prepare your data
+
+Prepare your data for modeling:
+
+```r
+coordinates(data) <- ~longitude+latitude
+```
+
+## Step 4: Run the species distribution model
+
+Run the model using the `dismo` package:
+
+```r
+model <- maxent(data)
+```
+
+## Step 5: Visualize the results
+
+Visualize the predicted species distribution:
+
+```r
+prediction <- predict(model, data)
+plot(prediction)
+```
+
+## Conclusion
+
+You have successfully run a species distribution model using R. You can now use this model to predict species distributions based on new environmental data.
